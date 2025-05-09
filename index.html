@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mysterious Choice Pokemon TCG Pocket</title>
+  <title>PTCG Pocket Card Challenge</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
 </head>
 <body>
-  <h1>Mysterious Choice Pokemon TCG Pocket</h1>
+  <h1>PTCG POCKET CARD CHALLENGE</h1>
   
   <div class="menu" id="expansion-menu">
     <div class="menu-item active" data-serie="random" data-max="0">Aleatório</div>
@@ -21,16 +23,34 @@
   </div>
 
   <div id="game">
-    <div class="row">
+    <div class="row top-row">
       <div class="card" id="card-0" onclick="chooseCard(0)"></div>
       <div class="card" id="card-1" onclick="chooseCard(1)"></div>
       <div class="card" id="card-2" onclick="chooseCard(2)"></div>
+    </div>
+    <div class="row bottom-row">
+      <div class="spacer"></div>
       <div class="card" id="card-3" onclick="chooseCard(3)"></div>
       <div class="card" id="card-4" onclick="chooseCard(4)"></div>
+      <div class="spacer"></div>
     </div>
-    <button id="start-btn" onclick="startGame()">Iniciar Jogo</button>
+    <button id="start-btn" onclick="startGame()">Play Again</button>
     <div style="display: none;" id="result" class="result"></div>
   </div>
+  <footer>
+    <div class="footer-content">
+        <p>
+            The card images are sourced from the official site: 
+            <a href="https://limitlesstcg.com/" target="_blank" rel="noopener noreferrer">Limitless TCG</a>. 
+            Visit the site for more information about the Pokémon Trading Card Game.
+        </p>
+        <p>
+            This site is not produced, endorsed, supported, or affiliated with Pokémon, Nintendo, Game Freak, or Creatures. 
+            All literal and graphical content presented, including card images and texts, is copyright of 
+            <strong>The Pokémon Company</strong>, <strong>Nintendo</strong>, <strong>Game Freak</strong>, and/or <strong>Creatures</strong>.
+        </p>
+    </div>
+</footer>
   <script src="javascript.js"></script>
 </body>
 </html>

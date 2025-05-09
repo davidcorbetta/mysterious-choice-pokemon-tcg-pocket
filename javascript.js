@@ -19,13 +19,11 @@ let selectedMaxCards = 0;
 let gameActive = false;
 let shuffleTimer = null;
 
-// Retorna uma URL aleatória para uma carta de uma expansão específica
 function getRandomCardUrl(serie, maxNum) {
   const cardNumber = String(Math.floor(Math.random() * maxNum) + 1).padStart(3, '0');
   return `https://limitlesstcg.nyc3.cdn.digitaloceanspaces.com/pocket/${serie}/${serie}_${cardNumber}_EN.webp`;
 }
 
-// Retorna uma URL aleatória de qualquer expansão
 function getRandomCardFromAnyExpansion() {
   const series = Object.keys(expansions);
   const randomSerie = series[Math.floor(Math.random() * series.length)];
@@ -33,7 +31,6 @@ function getRandomCardFromAnyExpansion() {
   return getRandomCardUrl(randomSerie, maxNum);
 }
 
-// Seleciona uma expansão no menu
 function selectExpansion(serie, maxCards) {
   document.querySelectorAll('.menu-item').forEach(item => {
       item.classList.remove('active');
@@ -44,26 +41,75 @@ function selectExpansion(serie, maxCards) {
   initGame();
 }
 
-// Animação de embaralhamento
 function animateShuffle() {
   const cards = document.querySelectorAll('.card');
+  const container = document.getElementById('game');
+  const containerRect = container.getBoundingClientRect();
+
+  const positions = [];
+
+  const centerX = containerRect.width / 2;
+  const centerY = containerRect.height / 2;
+
+  // Calcula o deslocamento e aumenta 4x para centralizar ainda mais
   cards.forEach(card => {
-      card.classList.add('shuffling');
+    const rect = card.getBoundingClientRect();
+    const cardCenterX = rect.left + rect.width / 2;
+    const cardCenterY = rect.top + rect.height / 2;
+
+    const offsetX = centerX - cardCenterX;
+    const offsetY = centerY - cardCenterY;
+
+    // 4x mais perto do centro
+    positions.push({ x: offsetX * 4, y: offsetY * 4 });
   });
-  setTimeout(() => {
-      cards.forEach(card => {
-          card.classList.remove('shuffling');
-      });
-  }, 900);
+
+  const timeline = gsap.timeline();
+
+  // Move pro centro com rotação 3D
+  cards.forEach((card, i) => {
+    timeline.to(card, {
+      duration: 0.5,
+      x: positions[i].x,
+      y: positions[i].y,
+      z: 300,
+      scale: 1.4,
+      rotationX: 360,
+      rotationY: 360,
+      ease: "power2.inOut"
+    }, 0);
+  });
+
+  // Gira todas no centro
+  timeline.to(cards, {
+    duration: 0.8,
+    rotationX: "+=720",
+    rotationY: "+=720",
+    rotationZ: "+=360",
+    ease: "power2.inOut"
+  }, 0.5);
+
+  // Volta para as posições originais
+  cards.forEach((card) => {
+    timeline.to(card, {
+      duration: 0.7,
+      x: 0,
+      y: 0,
+      z: 0,
+      scale: 1,
+      rotationX: 0,
+      rotationY: 0,
+      rotationZ: 0,
+      ease: "expo.out"
+    }, 1.3);
+  });
 }
 
-// Inicializa o jogo
 function initGame() {
     if (shuffleTimer) {
         clearTimeout(shuffleTimer);
     }
 
-    // Gerar 5 URLs de cartas aleatórias
     cards = [];
     for (let i = 0; i < 5; i++) {
         if (selectedExpansion === "random") {
@@ -82,31 +128,26 @@ function initGame() {
     document.getElementById("start-btn").disabled = true;
     document.getElementById("play-again-btn").style.display = "none";
 
-    // Mostra as cartas com as imagens reais por 3 segundos
     renderCards(false);
 
-    // Após 3 segundos, embaralha e oculta as cartas
     shuffleTimer = setTimeout(() => {
-        shuffleArray(cards); // Embaralha as cartas
-        animateShuffle(); // Animação de embaralhamento
+        shuffleArray(cards);
+        animateShuffle();
         setTimeout(() => {
             hidden = true;
             gameActive = true;
-            renderCards(true); // Mostra as cartas com a imagem de fundo
+            renderCards(true); 
         }, 1000);
     }, 2000);
 }
 
-// Revela todas as cartas
 function revealAllCards(clickedIndex) {
-    const delay = 700; // Tempo entre revelações
+    const delay = 400;
     let revealOrder = [...Array(cards.length).keys()];
 
-    // Remove a carta clicada da ordem e a adiciona no final
     revealOrder = revealOrder.filter(index => index !== clickedIndex);
     revealOrder.push(clickedIndex);
 
-    // Revela as cartas na ordem definida
     revealOrder.forEach((index, i) => {
         setTimeout(() => {
             const cardElement = document.getElementById(`card-${index}`);
@@ -114,7 +155,6 @@ function revealAllCards(clickedIndex) {
                 cardElement.classList.remove('hidden');
                 cardElement.classList.add('revealed');
 
-                // Atualiza a imagem da carta
                 const img = document.createElement('img');
                 img.src = cards[index];
                 img.alt = `Card ${index + 1}`;
@@ -125,7 +165,6 @@ function revealAllCards(clickedIndex) {
                 cardElement.innerHTML = '';
                 cardElement.appendChild(img);
 
-                // Adiciona um efeito especial para a carta escolhida
                 if (index === clickedIndex) {
                     cardElement.classList.add('chosen');
                 }
@@ -133,28 +172,23 @@ function revealAllCards(clickedIndex) {
         }, i * delay);
     });
 
-    // Exibe o resultado e o botão "Jogar Novamente" após todas as cartas serem reveladas
     setTimeout(() => {
-        document.getElementById("result").textContent = 
-            `Você escolheu a carta da posição ${clickedIndex + 1}`;
-        document.getElementById("play-again-btn").style.display = "block"; // Exibe o botão
+        document.getElementById("play-again-btn").style.display = "block";
     }, revealOrder.length * delay);
 }
 
-// Renderiza as cartas no tabuleiro
+
 function renderCards(hide = false, highlight = -1) {
     cards.forEach((cardUrl, index) => {
         const el = document.getElementById(`card-${index}`);
         el.className = 'card';
-        el.innerHTML = ''; // Limpa o conteúdo anterior
+        el.innerHTML = '';
 
         if (hide) {
-            // Mostra a imagem de fundo
             el.classList.add("hidden");
             el.style.background = "url('https://s3.pokeos.com/pokeos-uploads/tcg/pocket/back.webp') no-repeat center center";
             el.style.backgroundSize = "cover";
         } else {
-            // Mostra a imagem real da carta
             el.classList.remove("hidden");
             const img = document.createElement('img');
             img.src = cardUrl;
@@ -172,7 +206,6 @@ function renderCards(hide = false, highlight = -1) {
     });
 }
 
-// Escolhe uma carta
 function chooseCard(index) {
   if (!gameActive || !hidden || chosenIndex !== null) return;
 
@@ -182,16 +215,14 @@ function chooseCard(index) {
 
   setTimeout(() => {
       revealAllCards(index);
-  }, 1000);
+  }, 200);
 }
 
-// Jogar novamente após completar uma rodada
 function playAgain() {
   document.getElementById("play-again-btn").style.display = "none";
   initGame();
 }
 
-// Embaralha um array
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -199,7 +230,6 @@ function shuffleArray(array) {
     }
 }
 
-// Inicializa o jogo quando a página carregar
 window.onload = function () {
   document.querySelectorAll('.menu-item').forEach(item => {
       item.addEventListener('click', function () {
@@ -211,7 +241,7 @@ window.onload = function () {
 
   const playAgainBtn = document.createElement('button');
   playAgainBtn.id = 'play-again-btn';
-  playAgainBtn.textContent = 'Jogar Novamente';
+  playAgainBtn.textContent = 'Play Again';
   playAgainBtn.onclick = playAgain;
   playAgainBtn.style.display = 'none';
   document.getElementById('game').appendChild(playAgainBtn);
