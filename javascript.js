@@ -110,7 +110,7 @@ function revealAllCards(clickedIndex) {
     revealOrder.forEach((index, i) => {
         setTimeout(() => {
             const cardElement = document.getElementById(`card-${index}`);
-            if (cardElement) {
+            if (cardElement) {https://davidcorbetta.github.io/mysterious-choice-pokemon-tcg-pocket/
                 cardElement.classList.remove('hidden');
                 cardElement.classList.add('revealed');
 
