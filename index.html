@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mysterious Choice Pokemon TCG Pocket</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Mysterious Choice Pokemon TCG Pocket</h1>
+  
+  <div class="menu" id="expansion-menu">
+    <div class="menu-item active" data-serie="random" data-max="0">Aleatório</div>
+    <div class="menu-item" data-serie="A3" data-max="239">Celestial Guardians</div>
+    <div class="menu-item" data-serie="A2b" data-max="111">Shining Revelry</div>
+    <div class="menu-item" data-serie="A2a" data-max="96">Triumphant Light</div>
+    <div class="menu-item" data-serie="A2" data-max="207">Space-Time Smackdown</div>
+    <div class="menu-item" data-serie="A1a" data-max="86">Mythical Island</div>
+    <div class="menu-item" data-serie="A1" data-max="286">Genetic Apex</div>
+    <div class="menu-item" data-serie="P-A" data-max="73">Promo-A</div>
+  </div>
+
+  <div id="game">
+    <div class="row top-row">
+      <div class="card" id="card-0" onclick="chooseCard(0)"></div>
+      <div class="card" id="card-1" onclick="chooseCard(1)"></div>
+      <div class="card" id="card-2" onclick="chooseCard(2)"></div>
+    </div>
+    <div class="row bottom-row">
+      <div class="spacer"></div>
+      <div class="card" id="card-3" onclick="chooseCard(3)"></div>
+      <div class="card" id="card-4" onclick="chooseCard(4)"></div>
+      <div class="spacer"></div>
+    </div>
+    <button id="start-btn" onclick="startGame()">Iniciar Jogo</button>
+    <div style="display: none;" id="result" class="result"></div>
+  </div>
+  <script src="javascript.js"></script>
+</body>
+</html>
