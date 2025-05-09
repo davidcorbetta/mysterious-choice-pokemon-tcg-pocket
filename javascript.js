@@ -51,7 +51,7 @@ function animateShuffle() {
   const centerX = containerRect.width / 2;
   const centerY = containerRect.height / 2;
 
-  // Calcula o deslocamento e aumenta 4x para centralizar ainda mais
+  // Calcula o deslocamento e usa 2x para movimento mais suave
   cards.forEach(card => {
     const rect = card.getBoundingClientRect();
     const cardCenterX = rect.left + rect.width / 2;
@@ -60,8 +60,8 @@ function animateShuffle() {
     const offsetX = centerX - cardCenterX;
     const offsetY = centerY - cardCenterY;
 
-    // 4x mais perto do centro
-    positions.push({ x: offsetX * 4, y: offsetY * 4 });
+    // 2x mais perto do centro
+    positions.push({ x: offsetX * 2, y: offsetY * 2 });
   });
 
   const timeline = gsap.timeline();
@@ -104,6 +104,7 @@ function animateShuffle() {
     }, 1.3);
   });
 }
+
 
 function initGame() {
     if (shuffleTimer) {
